@@ -1,0 +1,51 @@
+Ext.define('JS.view.Location', {
+	extend: 'Ext.Container',
+	requires: 'Ext.Map',
+
+	xtype: 'location',
+
+	config: {
+
+		title: 'Location',
+		iconCls: 'locate',
+
+		layout: 'fit',
+
+		items: [
+			{
+				docked: 'top',
+				xtype: 'toolbar',
+				title: 'Location Info'
+			}
+		]
+	},
+
+	initialize: function() {
+
+        var position = new google.maps.LatLng(JS.app.mapCenter[0], JS.app.mapCenter[1]),
+   			infoWindow = new google.maps.InfoWindow({ content: JS.app.mapText }),
+			map, marker;
+
+		this.callParent();
+
+		map = this.add({
+			xtype: 'map',
+			mapOptions: {
+				center: position,
+                zoom: 16,
+		        mapTypeId: google.maps.MapTypeId.ROADMAP,
+                useCurrentLocation:true
+			}
+		});
+
+		marker = new google.maps.Marker({
+	        position: position,
+	        map: map.getMap(),
+	        visible: true
+	    });
+
+	    google.maps.event.addListener(marker, 'click', function() {
+	        infoWindow.open(map, marker);
+	    });
+	}
+});
